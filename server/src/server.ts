@@ -5,7 +5,13 @@ const app = express();
 const users = ["Luiz", "Eduardo", "Queiroz"];
 
 app.get("/users", (request, response) => {
-  return response.json(users);
+  const search = String(request.query.search);
+
+  const filteredUsers = search
+    ? users.filter((user) => user.includes(search))
+    : users;
+
+  return response.json(filteredUsers);
 });
 
 app.get("/users/:id", (request, response) => {
