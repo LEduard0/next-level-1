@@ -1,10 +1,22 @@
-import React from "react";
+import React, { useState } from "react";
 import "./App.css";
 
+import Header from "../src/components/Header";
+
 function App() {
+  const [counter, setCounter] = useState(0);
+
+  const handleButtonClick = () => {
+    setCounter(counter + 1);
+  };
+
   return (
     <div className="App">
-        <h1 className="hello-world">Hello World</h1>
+      <Header title="Hello" />
+      <h1>{counter}</h1>
+      <button type="button" onClick={handleButtonClick}>
+        Teste
+      </button>
     </div>
   );
 }
