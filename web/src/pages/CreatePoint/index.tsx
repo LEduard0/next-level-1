@@ -1,5 +1,5 @@
 import React, { ChangeEvent, FormEvent, useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import { FiArrowLeft } from "react-icons/fi";
 import { Map, TileLayer, Marker } from "react-leaflet";
 import { LeafletMouseEvent } from "leaflet";
@@ -45,6 +45,8 @@ const CreatePoint = () => {
     0,
     0,
   ]);
+
+  const history = useHistory()
 
   useEffect(() => {
     api.get("items").then((response) => {
@@ -136,6 +138,8 @@ const CreatePoint = () => {
     await api.post("points", data);
 
     alert("Ponto de Coleta Cadastrado");
+
+    history.push("/")
   }
 
   return (
