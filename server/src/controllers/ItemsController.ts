@@ -8,6 +8,7 @@ class ItemsController {
       return {
         title: item.title,
         image_url: `http://localhost:3333/uploads/${item.image}`,
+        id: item.id,
       };
     });
 
