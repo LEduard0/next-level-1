@@ -9,15 +9,24 @@ class PointsController {
       .split(",")
       .map((item) => Number(item.trim()));
 
-    const points = await knex("points")
+    var points: any = knex("points")
       .join("point_items", "points.id", "=", "point_items.point_id")
-      .whereIn("point_items.item_id", parsedItems)
-      .where("city", String(city))
-      .where("uf", String(uf))
       .distinct()
       .select("points.*");
 
-    return response.json(points);
+    if (items?.length) points.whereIn("point_items.item_id", parsedItems);
+    if (city != "" && city != undefined) points.where("city", String(city));
+    if (uf != "" && uf != undefined) points.where("uf", String(uf));
+
+    points.then((points: any) => {
+      const serializedPoints = points.map((point: any) => {
+        return {
+          ...point,
+          image_url: `${point.image}`,
+        };
+      });
+      return response.json(serializedPoints);
+    });
   }
 
   async show(request: Request, response: Response) {
