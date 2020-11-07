@@ -1,6 +1,5 @@
 import React, { ChangeEvent, FormEvent, useEffect, useState } from "react";
-import { Link, useHistory } from "react-router-dom";
-import { FiArrowLeft } from "react-icons/fi";
+import {  useHistory } from "react-router-dom";
 import { Map, TileLayer, Marker } from "react-leaflet";
 import { LeafletMouseEvent } from "leaflet";
 import axios from "axios";
@@ -9,7 +8,7 @@ import api from "../../services/api";
 import Dropzone from "../../components/Dropzone";
 
 import "./styles.css";
-import logo from "../../assets/logo.svg";
+import Header from "../../components/Header";
 
 interface Item {
   id: number;
@@ -150,13 +149,7 @@ const CreatePoint = () => {
 
   return (
     <div id="page-create-point">
-      <header>
-        <img src={logo} alt="App de Coleta" />
-        <Link to="/">
-          <FiArrowLeft />
-          Voltar para home
-        </Link>
-      </header>
+      <Header />
       <form action="" onSubmit={handleSubmit}>
         <h1>Cadastro do ponto de coleta</h1>
 
