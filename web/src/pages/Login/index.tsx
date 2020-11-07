@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import Header from "../../components/Header";
 import "./styles.css";
 
 const Login = () => {
@@ -15,6 +16,7 @@ const Login = () => {
 
   return (
     <div id="page-login">
+      <Header />
       <form onSubmit={handleSubmit}>
         <fieldset className="field-group">
           <div className="field">

@@ -183,6 +183,7 @@ const CreatePoint = () => {
                 type="email"
                 name="email"
                 id="email"
+                required={true}
               />
             </div>
             <div className="field">
@@ -192,6 +193,7 @@ const CreatePoint = () => {
                 type="text"
                 name="whatsapp"
                 id="whatsapp"
+                required={true}
               />
             </div>
           </div>

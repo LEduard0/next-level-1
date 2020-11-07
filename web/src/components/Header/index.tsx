@@ -8,10 +8,10 @@ const Header: React.FC = () => {
   return (
     <header className="header flex items-center justify-between w-100">
       <div className="header-logo flex items-center">
-        <Link className="flex" to="/">
+        <Link className="flex items-center no-underline" to="/">
           <img src={logo} alt="Coleta" />
+          <h1>Trash Out</h1>
         </Link>
-        <h1>Trash Out</h1>
       </div>
       <div className="header-login flex items-center">
         <Link className="flex no-underline" to="/login">
