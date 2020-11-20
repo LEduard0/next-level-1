@@ -16,6 +16,13 @@ const Header: React.FC = () => {
             Voltar para home
           </Link>
         );
+      case "/login":
+        return (
+          <Link to="/" className="no-underline">
+            <FiArrowLeft />
+            Voltar para Home
+          </Link>
+        );
       default:
         return (
           <div className="header-login flex items-center">
