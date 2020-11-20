@@ -1,47 +1,54 @@
-import React, { useState } from "react";
+import React, { ChangeEvent, useState } from "react";
 import Header from "../../components/Header";
 import "./styles.css";
 
+const initialState = () => {
+  return {
+    email: "",
+    password: "",
+  };
+};
+
 const Login = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [values, setValues] = useState(initialState);
 
-  function validateForm() {
-    return email.length > 0 && password.length > 0;
-  }
+  const handleChange = (event: any) => {
+    const { value, name } = event.target;
 
-  function handleSubmit(event: any) {
-    event.preventDefault();
-  }
+    setValues({
+      ...values,
+      [name]: value,
+    });
+  };
 
   return (
     <div id="page-login">
       <Header />
-      <form onSubmit={handleSubmit}>
+      <form>
         <fieldset className="field-group">
           <div className="field">
             <label>Email</label>
             <input
               autoFocus
               type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              name="email"
+              value={values.email}
+              onChange={handleChange}
             />
           </div>
         </fieldset>
         <fieldset className="field-group">
           <div className="field">
-            <label>Password</label>
+            <label>Senha</label>
             <input
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              value={values.password}
+              onChange={handleChange}
+              name="password"
               type="password"
             />
           </div>
         </fieldset>
-        <button disabled={!validateForm()} type="submit">
-          Login
-        </button>
+        <button type="submit">Login</button>
       </form>
     </div>
   );
