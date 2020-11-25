@@ -2,6 +2,10 @@ import express from "express";
 import multer from "multer";
 import multerConfig from "./config/multer";
 import { celebrate, Joi } from "celebrate";
+import authMiddleware from "./auth";
+import jwt from "jsonwebtoken";
+
+import { Request, Response } from "express";
 
 import PointsController from "./controllers/PointsController";
 import ItemsController from "./controllers/ItemsController";
@@ -15,6 +19,41 @@ const itemsController = new ItemsController();
 routes.get("/items", itemsController.index);
 routes.get("/points", pointsController.index);
 routes.get("/points/:id", pointsController.show);
+
+routes.post("/authenticate", (req: Request, res: Response) => {
+  const user = {
+    id: 1,
+    name: "Luiz Eduardo",
+    company: "Teste",
+  };
+
+  return res.json({
+    user,
+    token: jwt.sign(user, "PRIVATEKEY"),
+  });
+});
+
+routes.use(authMiddleware);
+
+routes.get("/users", async (req: Request, res: Response) => {
+  return res.json([
+    {
+      id: 1,
+      name: "Mateus Silva",
+      website: "https://devacademy.com.br",
+    },
+    {
+      id: 2,
+      name: "Mark Zuckerberg",
+      website: "https://facebook.com",
+    },
+    {
+      id: 3,
+      name: "Bill Gates",
+      website: "https://www.microsoft.com",
+    },
+  ]);
+});
 
 routes.post(
   "/points",
