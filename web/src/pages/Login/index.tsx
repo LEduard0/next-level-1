@@ -1,4 +1,6 @@
-import React, { ChangeEvent, useState } from "react";
+import React, { FormEvent, useContext, useState } from "react";
+import Pointscontext from "../../contexts/PointsContext";
+import { useHistory } from "react-router-dom";
 import Header from "../../components/Header";
 import "./styles.css";
 
@@ -9,8 +11,17 @@ const initialState = () => {
   };
 };
 
+const validateLogin = ({ email, password }: any) => {
+  if (email === "admin" && password === "admin") {
+    return { token: "1234" };
+  }
+  return alert("Usuario ou senha inválido");
+};
+
 const Login = () => {
   const [values, setValues] = useState(initialState);
+  const { setToken } = useContext(Pointscontext);
+  const history = useHistory();
 
   const handleChange = (event: any) => {
     const { value, name } = event.target;
@@ -21,10 +32,22 @@ const Login = () => {
     });
   };
 
+  const handleSubmit = (event: FormEvent) => {
+    event.preventDefault();
+
+    const { token }: any = validateLogin(values);
+
+    if (token) {
+      setToken(token);
+      return history.push("/");
+    }
+    setValues(initialState);
+  };
+
   return (
     <div id="page-login">
       <Header />
-      <form>
+      <form onSubmit={handleSubmit}>
         <fieldset className="field-group">
           <div className="field">
             <label>Email</label>

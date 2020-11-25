@@ -2,7 +2,7 @@ import { createContext } from "react";
 
 const PointsContext = createContext({
   token: null,
-  setToken: () => {},
+  setToken: (_: any) => {},
 });
 
 export default PointsContext;
