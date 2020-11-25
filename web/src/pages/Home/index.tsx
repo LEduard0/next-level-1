@@ -1,17 +1,15 @@
 import React from "react";
 import { FiLogIn } from "react-icons/fi";
 import { Link } from "react-router-dom";
+import Header from "../../components/Header";
 
 import "./styles.css";
-import logo from "../../assets/logo.svg";
 
 const Home = () => {
   return (
     <div id="page-home">
       <div className="content">
-        <header>
-          <img src={logo} alt="Coleta" />
-        </header>
+        <Header />
         <main>
           <h1>Seu marketplace de coleta de resíduos.</h1>
           <p>
