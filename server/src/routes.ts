@@ -2,7 +2,6 @@ import express from "express";
 import multer from "multer";
 import multerConfig from "./config/multer";
 import { celebrate, Joi } from "celebrate";
-import authMiddleware from "./auth";
 import jwt from "jsonwebtoken";
 
 import { Request, Response } from "express";
@@ -32,8 +31,6 @@ routes.post("/authenticate", (req: Request, res: Response) => {
     token: jwt.sign(user, "PRIVATEKEY"),
   });
 });
-
-routes.use(authMiddleware);
 
 routes.get("/users", async (req: Request, res: Response) => {
   return res.json([
