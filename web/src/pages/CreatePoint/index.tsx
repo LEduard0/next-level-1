@@ -1,5 +1,5 @@
 import React, { ChangeEvent, FormEvent, useEffect, useState } from "react";
-import {  useHistory } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import { Map, TileLayer, Marker } from "react-leaflet";
 import { LeafletMouseEvent } from "leaflet";
 import axios from "axios";
@@ -36,6 +36,7 @@ const CreatePoint = () => {
   ]);
   const [formData, setFormData] = useState({
     name: "",
+    password: "",
     email: "",
     whatsapp: "",
   });
@@ -120,7 +121,7 @@ const CreatePoint = () => {
   async function handleSubmit(event: FormEvent) {
     event.preventDefault();
 
-    const { name, email, whatsapp } = formData;
+    const { name, email, whatsapp, password } = formData;
     const uf = selectedUf;
     const city = selectedCity;
     const [latitude, longitude] = selectedPosition;
@@ -129,6 +130,7 @@ const CreatePoint = () => {
     const data = new FormData();
     data.append("name", name);
     data.append("email", email);
+    data.append("password", password);
     data.append("whatsapp", whatsapp);
     data.append("uf", uf);
     data.append("city", city);
@@ -166,6 +168,15 @@ const CreatePoint = () => {
               type="text"
               name="name"
               id="name"
+            />
+          </div>
+          <div className="field">
+            <label htmlFor="password">Senha de Acesso</label>
+            <input
+              onChange={handleInputChange}
+              type="text"
+              name="password"
+              id="password"
             />
           </div>
           <div className="field-group">
