@@ -174,7 +174,7 @@ const CreatePoint = () => {
             <label htmlFor="password">Senha de Acesso</label>
             <input
               onChange={handleInputChange}
-              type="text"
+              type="password"
               name="password"
               id="password"
             />
