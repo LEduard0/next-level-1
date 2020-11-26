@@ -2,6 +2,10 @@ import jwt from "jsonwebtoken";
 import { promisify } from "util";
 
 async function validate({ req, res, next }: any) {
+  if (!req) {
+    return res.sendStatus(400);
+  }
+
   const { authorization } = req.headers;
 
   if (!authorization) {

@@ -2,12 +2,15 @@ import React from "react";
 import "./App.css";
 
 import Routes from "./routes";
+import { AuthProvider } from "./contexts/PointsContext";
 
 function App() {
   return (
-    <div className="App">
-      <Routes />
-    </div>
+    <AuthProvider>
+      <div className="App">
+        <Routes />
+      </div>
+    </AuthProvider>
   );
 }
 
