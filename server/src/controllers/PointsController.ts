@@ -54,6 +54,7 @@ class PointsController {
   async create(request: Request, response: Response) {
     const {
       name,
+      password,
       email,
       whatsapp,
       latitude,
@@ -68,6 +69,7 @@ class PointsController {
     const point = {
       image: request.file.filename,
       name,
+      password,
       email,
       whatsapp,
       latitude,

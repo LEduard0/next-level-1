@@ -1,12 +1,15 @@
-import React from "react";
+import React, { useContext } from "react";
 import { FiUser } from "react-icons/fi";
 import { Link } from "react-router-dom";
 import { FiArrowLeft } from "react-icons/fi";
+import { PointsContext } from "../../contexts/PointsContext";
 
 import logo from "../../assets/logo.svg";
 import "./styles.css";
 
 const Header: React.FC = () => {
+  const { handleLogout } = useContext(PointsContext);
+
   const renderHeaderIcons = () => {
     switch (window.location.pathname) {
       case "/create-point":
@@ -22,6 +25,12 @@ const Header: React.FC = () => {
             <FiArrowLeft />
             Voltar para Home
           </Link>
+        );
+      case "/change-point":
+        return (
+          <a onClick={handleLogout} className="no-underline pointer">
+            Logout
+          </a>
         );
       default:
         return (

@@ -1,18 +1,18 @@
 import React, { useContext } from "react";
 import { Route, Redirect, RouteProps } from "react-router-dom";
-import PointsContext from "../../../contexts/PointsContext";
+import { PointsContext } from "../../../contexts/PointsContext";
 
 const RoutesPrivate: React.FC<RouteProps> = ({
   component: Component,
   ...rest
 }: any) => {
-  const { token } = useContext(PointsContext);
+  const { authenticated } = useContext(PointsContext);
 
   return (
     <Route
       {...rest}
       render={() =>
-        token ? <Component {...rest} /> : <Redirect to="/login" />
+        authenticated ? <Component {...rest} /> : <Redirect to="/login" />
       }
     />
   );
