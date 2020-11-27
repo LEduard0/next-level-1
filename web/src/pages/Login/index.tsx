@@ -1,4 +1,4 @@
-import React, { FormEvent, useContext, useState } from "react";
+import React, { useContext, useState } from "react";
 import { PointsContext } from "../../contexts/PointsContext";
 import Header from "../../components/Header";
 import "./styles.css";
@@ -13,9 +13,7 @@ const initialState = () => {
 const Login = () => {
   const [values, setValues] = useState(initialState);
 
-  const { authenticated, handleLogin } = useContext(PointsContext);
-
-  console.log(authenticated);
+  const { handleLogin } = useContext(PointsContext);
 
   const handleChange = (event: any) => {
     const { value, name } = event.target;
