@@ -1,5 +1,5 @@
-import React, { ChangeEvent, useState, useEffect } from "react";
-import Dropzone from "../../components/Dropzone";
+import React, { ChangeEvent, useState, useEffect, useContext } from "react";
+import { PointsContext } from "../../contexts/PointsContext";
 import Header from "../../components/Header";
 import axios from "axios";
 import api from "../../services/api";
@@ -13,19 +13,39 @@ interface IBGECityResponse {
   nome: string;
 }
 
+const initialState = () => {
+  return {
+    city: "Atibaia",
+    email: "",
+    id: 0,
+    image: "",
+    latitude: 0,
+    longitude: 0,
+    name: "",
+    uf: "",
+    whatsapp: "",
+  };
+};
+
 const PointChange: React.FC = () => {
-  const [selectedFile, setSelectedFile] = useState<File>();
+  const localStoragePoint: any = localStorage.getItem("pointData");
+
   function handleInputChange(event: ChangeEvent<HTMLInputElement>) {
     const { name, value } = event.target;
+
+    setValues({
+      ...values,
+      [name]: value,
+    });
   }
 
   const handleSubmit = () => {};
 
+  const [values, setValues] = useState(initialState);
   const [ufs, setUfs] = useState<string[]>([]);
   const [cities, setCities] = useState<string[]>([]);
-
-  const [selectedUf, setSelectedUf] = useState("0");
-  const [selectedCity, setSelectedCity] = useState("0");
+  const [selectedUf, setSelectedUf] = useState(values.uf);
+  const [selectedCity, setSelectedCity] = useState(values.city);
 
   useEffect(() => {
     axios
@@ -51,6 +71,16 @@ const PointChange: React.FC = () => {
       });
   }, [selectedUf]);
 
+  useEffect(() => {
+    if (localStoragePoint) {
+      const point = JSON.parse(localStoragePoint);
+
+      setValues({ ...point });
+      setSelectedUf(point.uf);
+      setSelectedCity(point.city);
+    }
+  }, [localStoragePoint]);
+
   function handleSelectUf(event: ChangeEvent<HTMLSelectElement>) {
     const uf = event.target.value;
     setSelectedUf(uf);
@@ -68,7 +98,12 @@ const PointChange: React.FC = () => {
         <form action="" onSubmit={handleSubmit}>
           <h1>Alteração do ponto de coleta</h1>
 
-          <Dropzone onFileUploaded={setSelectedFile} />
+          <div className="point-image">
+            <img
+              src={`http://localhost:3333/uploads/${values.image}`}
+              alt={values.name}
+            />
+          </div>
 
           <fieldset>
             <legend>
@@ -81,6 +116,7 @@ const PointChange: React.FC = () => {
                 type="text"
                 name="name"
                 id="name"
+                value={values.name}
               />
             </div>
             <div className="field-group">
@@ -92,6 +128,7 @@ const PointChange: React.FC = () => {
                   name="email"
                   id="email"
                   required={true}
+                  value={values.email}
                 />
               </div>
               <div className="field">
@@ -102,6 +139,7 @@ const PointChange: React.FC = () => {
                   name="whatsapp"
                   id="whatsapp"
                   required={true}
+                  value={values.whatsapp}
                 />
               </div>
             </div>
@@ -110,11 +148,35 @@ const PointChange: React.FC = () => {
             <div className="field-group">
               <div className="field">
                 <label htmlFor="uf">Estado (UF)</label>
-                <select name="uf" id="uf"></select>
+                <select
+                  name="uf"
+                  id="uf"
+                  value={selectedUf}
+                  onChange={handleSelectUf}
+                >
+                  <option value="0">Selecione uma UF</option>
+                  {ufs.map((uf) => (
+                    <option key={uf} value={uf}>
+                      {uf}
+                    </option>
+                  ))}
+                </select>
               </div>
               <div className="field">
                 <label htmlFor="cidade">Cidade</label>
-                <select name="cidade" id="cidade"></select>
+                <select
+                  name="cidade"
+                  id="cidade"
+                  value={selectedCity}
+                  onChange={handleSelectCity}
+                >
+                  <option value="0">Selecione uma cidade</option>
+                  {cities.map((city) => (
+                    <option key={city} value={city}>
+                      {city}
+                    </option>
+                  ))}
+                </select>
               </div>
             </div>
           </fieldset>
