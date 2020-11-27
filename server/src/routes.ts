@@ -2,55 +2,36 @@ import express from "express";
 import multer from "multer";
 import multerConfig from "./config/multer";
 import { celebrate, Joi } from "celebrate";
-import jwt from "jsonwebtoken";
-
-import { Request, Response } from "express";
 
 import PointsController from "./controllers/PointsController";
 import ItemsController from "./controllers/ItemsController";
+import AuthenticateController from "./controllers/AuthenticateController";
 
 const routes = express.Router();
 const upload = multer(multerConfig);
 
 const pointsController = new PointsController();
 const itemsController = new ItemsController();
+const authenticateController = new AuthenticateController();
 
 routes.get("/items", itemsController.index);
 routes.get("/points", pointsController.index);
 routes.get("/points/:id", pointsController.show);
 
-routes.post("/authenticate", (req: Request, res: Response) => {
-  const user = {
-    id: 1,
-    name: "Luiz Eduardo",
-    company: "Teste",
-  };
-
-  return res.json({
-    user,
-    token: jwt.sign(user, "PRIVATEKEY"),
-  });
-});
-
-routes.get("/users", async (req: Request, res: Response) => {
-  return res.json([
+routes.post(
+  
+  "/authenticate",
+  celebrate(
     {
-      id: 1,
-      name: "Mateus Silva",
-      website: "https://devacademy.com.br",
+      body: Joi.object().keys({
+        email: Joi.string().required(),
+        password: Joi.string().required(),
+      }),
     },
-    {
-      id: 2,
-      name: "Mark Zuckerberg",
-      website: "https://facebook.com",
-    },
-    {
-      id: 3,
-      name: "Bill Gates",
-      website: "https://www.microsoft.com",
-    },
-  ]);
-});
+    { abortEarly: false }
+  ),
+  authenticateController.index
+);
 
 routes.post(
   "/points",

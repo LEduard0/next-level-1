@@ -22,14 +22,20 @@ function AuthProvider({ children }: any) {
 
   const handleLogin = async (event: FormEvent) => {
     event.preventDefault();
+
+    const { email, password }: any = event?.target;
+
     const {
       data: { token },
-    } = await api.post("/authenticate");
+    } = await api.post("authenticate", {
+      email: email.value,
+      password: password.value,
+    });
 
     localStorage.setItem("token", JSON.stringify(token));
     api.defaults.headers.Authorization = `Bearer ${token}`;
     setAuthenticated(true);
-    history.push("/change-point");
+    // history.push("/change-point");
   };
 
   const handleLogout = async (event: FormEvent) => {
