@@ -1,12 +1,12 @@
 import React, { createContext, FormEvent, useState, useEffect } from "react";
 
 import api from "../services/api";
-import history from "../history";
 
 const PointsContext = createContext<any | undefined>({});
 
 function AuthProvider({ children }: any) {
   const [authenticated, setAuthenticated] = useState(false);
+  const [pointData, setPointData] = useState({});
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -26,16 +26,18 @@ function AuthProvider({ children }: any) {
     const { email, password }: any = event?.target;
 
     const {
-      data: { token },
+      data: { point, token },
     } = await api.post("authenticate", {
       email: email.value,
       password: password.value,
     });
 
     localStorage.setItem("token", JSON.stringify(token));
+    localStorage.setItem("pointData", JSON.stringify(point));
     api.defaults.headers.Authorization = `Bearer ${token}`;
+    setPointData(JSON.stringify(point));
     setAuthenticated(true);
-    // history.push("/change-point");
+    window.location.href = "/change-point";
   };
 
   const handleLogout = async (event: FormEvent) => {
@@ -43,8 +45,8 @@ function AuthProvider({ children }: any) {
     setAuthenticated(false);
 
     localStorage.removeItem("token");
+    localStorage.removeItem("pointData");
     api.defaults.headers.Authorization = undefined;
-    history.push("/login");
   };
 
   if (loading) {
@@ -53,7 +55,7 @@ function AuthProvider({ children }: any) {
 
   return (
     <PointsContext.Provider
-      value={{ authenticated, handleLogin, handleLogout }}
+      value={{ authenticated, handleLogin, handleLogout, pointData }}
     >
       {children}
     </PointsContext.Provider>
