@@ -159,6 +159,15 @@
   background: #2fb86e;
 }
 
+#page-change-point .point-image {
+  height: 300px;
+}
+
+#page-change-point .point-image img {
+  max-height: 300px;
+  width: 100%;
+}
+
 .items-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
