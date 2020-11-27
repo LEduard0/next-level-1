@@ -1,4 +1,6 @@
 import React, { ChangeEvent, useState, useEffect } from "react";
+import { Map, TileLayer, Marker } from "react-leaflet";
+import { LeafletMouseEvent } from "leaflet";
 import Header from "../../components/Header";
 import axios from "axios";
 import api from "../../services/api";
@@ -42,6 +44,14 @@ const PointChange: React.FC = () => {
   const [selectedUf, setSelectedUf] = useState(values.uf);
   const [selectedCity, setSelectedCity] = useState(values.city);
   const [selectedItems, setSelectedItems] = useState<number[]>([]);
+  const [selectedPosition, setSelectedPosition] = useState<[number, number]>([
+    0,
+    0,
+  ]);
+  const [InitialPosition, setInitialPosition] = useState<[number, number]>([
+    0,
+    0,
+  ]);
 
   function handleInputChange(event: ChangeEvent<HTMLInputElement>) {
     const { name, value } = event.target;
@@ -62,13 +72,27 @@ const PointChange: React.FC = () => {
     } else setSelectedItems([...selectedItems, id]);
   }
 
+  const handleSubmit = () => {};
+
+  function handleSelectUf(event: ChangeEvent<HTMLSelectElement>) {
+    const uf = event.target.value;
+    setSelectedUf(uf);
+  }
+
+  function handleSelectCity(event: ChangeEvent<HTMLSelectElement>) {
+    const city = event.target.value;
+    setSelectedCity(city);
+  }
+
+  function handleMapClick(event: LeafletMouseEvent) {
+    setSelectedPosition([event.latlng.lat, event.latlng.lng]);
+  }
+
   useEffect(() => {
     api.get("items").then((response) => {
       setItems(response.data);
     });
   }, []);
-
-  const handleSubmit = () => {};
 
   useEffect(() => {
     axios
@@ -103,6 +127,8 @@ const PointChange: React.FC = () => {
       setValues({ ...point });
       setSelectedUf(point.uf);
       setSelectedCity(point.city);
+      setInitialPosition([point.latitude, point.longitude]);
+      setSelectedPosition([point.latitude, point.longitude]);
 
       items.forEach((item: any) => {
         idItems.push(item.id);
@@ -110,16 +136,6 @@ const PointChange: React.FC = () => {
       setSelectedItems(idItems);
     }
   }, [localStoragePoint]);
-
-  function handleSelectUf(event: ChangeEvent<HTMLSelectElement>) {
-    const uf = event.target.value;
-    setSelectedUf(uf);
-  }
-
-  function handleSelectCity(event: ChangeEvent<HTMLSelectElement>) {
-    const city = event.target.value;
-    setSelectedCity(city);
-  }
 
   return (
     <div id="page-change-point">
@@ -175,6 +191,18 @@ const PointChange: React.FC = () => {
             </div>
           </fieldset>
           <fieldset>
+            <legend>
+              <h2>Endereço</h2>
+              <span>Selecione o endereço no mapa</span>
+            </legend>
+
+            <Map center={InitialPosition} zoom={15} onClick={handleMapClick}>
+              <TileLayer
+                attribution='&amp;copy <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+              />
+              <Marker position={selectedPosition} />
+            </Map>
             <div className="field-group">
               <div className="field">
                 <label htmlFor="uf">Estado (UF)</label>
