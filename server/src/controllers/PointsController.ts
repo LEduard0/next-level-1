@@ -1,4 +1,4 @@
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 import knex from "../database/connection";
 
 class PointsController {
@@ -97,6 +97,57 @@ class PointsController {
     await trx.commit();
 
     return response.json({ id: point_id, ...point });
+  }
+
+  async update(request: Request, response: Response, next: NextFunction) {
+    try {
+      const {
+        name,
+        email,
+        whatsapp,
+        latitude,
+        longitude,
+        city,
+        uf,
+        items,
+      } = await request.body;
+
+      const trx = await knex.transaction();
+
+      const point = {
+        name,
+        email,
+        whatsapp,
+        latitude,
+        longitude,
+        city,
+        uf,
+      };
+
+      const { id } = request.params;
+
+      await trx("points").update(point).where({ id });
+
+      await trx("point_items").where({ point_id: id }).del();
+
+      const pointItems = items
+        .split(",")
+        .map((item: string) => Number(item.trim()))
+        .map((item_id: number) => {
+          return {
+            item_id,
+            point_id: id,
+          };
+        });
+
+      await trx("point_items").insert(pointItems);
+
+      await trx.commit();
+
+      return response.send();
+    } catch (error) {
+      next(error);
+    }
   }
 }
 
