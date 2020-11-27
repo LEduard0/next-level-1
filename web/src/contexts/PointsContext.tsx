@@ -26,11 +26,15 @@ function AuthProvider({ children }: any) {
     const { email, password }: any = event?.target;
 
     const {
-      data: { point, items, token },
+      data: { point, items, token, message },
     } = await api.post("authenticate", {
       email: email.value,
       password: password.value,
     });
+
+    if (message) {
+      return alert(message);
+    }
 
     localStorage.setItem("token", JSON.stringify(token));
     localStorage.setItem("pointData", JSON.stringify(point));
