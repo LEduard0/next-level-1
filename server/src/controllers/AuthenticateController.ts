@@ -11,11 +11,20 @@ class AuuthenticateController {
       .where("password", password)
       .first();
 
+    const items = await knex("items")
+      .join("point_items", "items.id", "=", "point_items.item_id")
+      .where("point_items.point_id", point.id)
+      .select("items.id");
+
     if (!point) {
-      return response.json({ message: "usuario ou senha incorreto", token: false });
+      return response.json({
+        message: "usuario ou senha incorreto",
+        token: false,
+      });
     }
 
     return response.json({
+      items,
       point,
       token: jwt.sign(point, "PRIVATEKEY"),
     });

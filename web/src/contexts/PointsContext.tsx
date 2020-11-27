@@ -26,7 +26,7 @@ function AuthProvider({ children }: any) {
     const { email, password }: any = event?.target;
 
     const {
-      data: { point, token },
+      data: { point, items, token },
     } = await api.post("authenticate", {
       email: email.value,
       password: password.value,
@@ -34,6 +34,7 @@ function AuthProvider({ children }: any) {
 
     localStorage.setItem("token", JSON.stringify(token));
     localStorage.setItem("pointData", JSON.stringify(point));
+    localStorage.setItem("pointItems", JSON.stringify(items));
     api.defaults.headers.Authorization = `Bearer ${token}`;
     setPointData(JSON.stringify(point));
     setAuthenticated(true);
@@ -46,6 +47,7 @@ function AuthProvider({ children }: any) {
 
     localStorage.removeItem("token");
     localStorage.removeItem("pointData");
+    localStorage.removeItem("pointItems");
     api.defaults.headers.Authorization = undefined;
   };
 
