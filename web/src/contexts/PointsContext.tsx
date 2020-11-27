@@ -49,6 +49,7 @@ function AuthProvider({ children }: any) {
     localStorage.removeItem("pointData");
     localStorage.removeItem("pointItems");
     api.defaults.headers.Authorization = undefined;
+    window.location.href = "/";
   };
 
   if (loading) {
