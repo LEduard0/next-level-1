@@ -9,19 +9,28 @@ class AuuthenticateController {
     const point = await knex("points")
       .where("email", email)
       .where("password", password)
+      .select("points.id")
+      .select("points.uf")
+      .select("points.name")
+      .select("points.city")
+      .select("points.latitude")
+      .select("points.longitude")
+      .select("points.whatsapp")
+      .select("points.email")
+      .select("points.image")
       .first();
+
+    if (!point) {
+      return response.json({
+        message: "Email ou Senha incorreto",
+        token: false,
+      });
+    }
 
     const items = await knex("items")
       .join("point_items", "items.id", "=", "point_items.item_id")
       .where("point_items.point_id", point.id)
       .select("items.id");
-
-    if (!point) {
-      return response.json({
-        message: "usuario ou senha incorreto",
-        token: false,
-      });
-    }
 
     return response.json({
       items,
