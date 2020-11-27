@@ -1,5 +1,4 @@
-import React, { ChangeEvent, useState, useEffect, useContext } from "react";
-import { PointsContext } from "../../contexts/PointsContext";
+import React, { ChangeEvent, useState, useEffect } from "react";
 import Header from "../../components/Header";
 import axios from "axios";
 import api from "../../services/api";
@@ -11,6 +10,12 @@ interface IBGEUFResponse {
 
 interface IBGECityResponse {
   nome: string;
+}
+
+interface Item {
+  id: number;
+  title: string;
+  image_url: string;
 }
 
 const initialState = () => {
@@ -29,6 +34,14 @@ const initialState = () => {
 
 const PointChange: React.FC = () => {
   const localStoragePoint: any = localStorage.getItem("pointData");
+  const localStoragePointItems: any = localStorage.getItem("pointItems");
+  const [items, setItems] = useState<Item[]>([]);
+  const [values, setValues] = useState(initialState);
+  const [ufs, setUfs] = useState<string[]>([]);
+  const [cities, setCities] = useState<string[]>([]);
+  const [selectedUf, setSelectedUf] = useState(values.uf);
+  const [selectedCity, setSelectedCity] = useState(values.city);
+  const [selectedItems, setSelectedItems] = useState<number[]>([]);
 
   function handleInputChange(event: ChangeEvent<HTMLInputElement>) {
     const { name, value } = event.target;
@@ -39,13 +52,23 @@ const PointChange: React.FC = () => {
     });
   }
 
-  const handleSubmit = () => {};
+  function handleSelectItem(id: number) {
+    const alreadySelected = selectedItems.findIndex((item) => item === id);
 
-  const [values, setValues] = useState(initialState);
-  const [ufs, setUfs] = useState<string[]>([]);
-  const [cities, setCities] = useState<string[]>([]);
-  const [selectedUf, setSelectedUf] = useState(values.uf);
-  const [selectedCity, setSelectedCity] = useState(values.city);
+    if (alreadySelected >= 0) {
+      const fielteredItems = selectedItems.filter((item) => item !== id);
+
+      setSelectedItems(fielteredItems);
+    } else setSelectedItems([...selectedItems, id]);
+  }
+
+  useEffect(() => {
+    api.get("items").then((response) => {
+      setItems(response.data);
+    });
+  }, []);
+
+  const handleSubmit = () => {};
 
   useEffect(() => {
     axios
@@ -72,12 +95,19 @@ const PointChange: React.FC = () => {
   }, [selectedUf]);
 
   useEffect(() => {
-    if (localStoragePoint) {
+    if (localStoragePoint && localStoragePointItems) {
       const point = JSON.parse(localStoragePoint);
+      const items = JSON.parse(localStoragePointItems);
+      var idItems: number[] = [];
 
       setValues({ ...point });
       setSelectedUf(point.uf);
       setSelectedCity(point.city);
+
+      items.forEach((item: any) => {
+        idItems.push(item.id);
+      });
+      setSelectedItems(idItems);
     }
   }, [localStoragePoint]);
 
@@ -179,6 +209,30 @@ const PointChange: React.FC = () => {
                 </select>
               </div>
             </div>
+          </fieldset>
+          <fieldset>
+            <legend>
+              <h2>Ítens de coleta</h2>
+              <span>Selecine um ou mais dos ítens abaixo</span>
+            </legend>
+            <ul className="items-grid">
+              {items.map((item) => {
+                return (
+                  <li
+                    key={item.id}
+                    onClick={() => {
+                      handleSelectItem(item.id);
+                    }}
+                    className={
+                      selectedItems.includes(item.id) ? "selected" : ""
+                    }
+                  >
+                    <img src={item.image_url} alt={item.title} />
+                    <span>{item.title}</span>
+                  </li>
+                );
+              })}
+            </ul>
           </fieldset>
           <button type="submit">Alterar o Estabelecimento</button>
         </form>
