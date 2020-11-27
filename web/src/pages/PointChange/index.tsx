@@ -213,7 +213,6 @@ const PointChange: React.FC = () => {
           <fieldset>
             <legend>
               <h2>Ítens de coleta</h2>
-              <span>Selecine um ou mais dos ítens abaixo</span>
             </legend>
             <ul className="items-grid">
               {items.map((item) => {
