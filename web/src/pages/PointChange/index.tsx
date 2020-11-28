@@ -1,4 +1,4 @@
-import React, { ChangeEvent, useState, useEffect } from "react";
+import React, { FormEvent, ChangeEvent, useState, useEffect } from "react";
 import { Map, TileLayer, Marker } from "react-leaflet";
 import { LeafletMouseEvent } from "leaflet";
 import Header from "../../components/Header";
@@ -72,7 +72,30 @@ const PointChange: React.FC = () => {
     } else setSelectedItems([...selectedItems, id]);
   }
 
-  const handleSubmit = () => {};
+  const handleSubmit = async (event: FormEvent) => {
+    event.preventDefault();
+
+    const { name, email, whatsapp, id } = values;
+    const uf = selectedUf;
+    const city = selectedCity;
+    const [latitude, longitude] = selectedPosition;
+    const items = selectedItems;
+
+    await api.put(`points/${id}`, {
+      name,
+      email,
+      whatsapp,
+      uf,
+      city,
+      latitude: String(latitude),
+      longitude: String(longitude),
+      items: items.join(","),
+    });
+
+    alert("Ponto de Coleta Alterado");
+
+    window.location.href = "/";
+  };
 
   function handleSelectUf(event: ChangeEvent<HTMLSelectElement>) {
     const uf = event.target.value;

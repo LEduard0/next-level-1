@@ -19,7 +19,6 @@ routes.get("/points", pointsController.index);
 routes.get("/points/:id", pointsController.show);
 
 routes.post(
-  
   "/authenticate",
   celebrate(
     {
@@ -54,5 +53,7 @@ routes.post(
   ),
   pointsController.create
 );
+
+routes.put("/points/:id", pointsController.update);
 
 export default routes;
